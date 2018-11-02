@@ -1,0 +1,150 @@
+{include file="public/header"/}
+<link rel="stylesheet" type="text/css" href="../../static/admin/webupload/webuploader.css">
+<link rel="stylesheet" type="text/css" href="../../static/admin/webupload/style.css">
+<div class="row">
+    <div class="col-sm-12">
+        <div class="ibox float-e-margins">
+            <div class="ibox-content">
+                <form class="form-horizontal" method="post" id="signupForm" action="{:url('Category/edit')}">
+                    <input type="hidden" value="{$dataInfo.id}" name="id">
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">分类名称</label>
+                        <div class="col-sm-10">
+                            <input type="text" name="title" id="title" class="form-control" value="{$dataInfo.title}">
+                        </div>
+                    </div>
+
+                    <div class="hr-line-dashed"></div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">封面图</label>
+                        <div class="col-sm-10">
+                            <input type="hidden" id="data_photo" name="picture" value="{$dataInfo.picture}">
+                            <div id="fileList" class="uploader-list" style="float:right"></div>
+                            <div id="imgPicker" style="float:left">选择图片</div>
+                            <img id="img_data" height="80px" width="80px" style="float:left;margin-left: 50px;margin-top: -10px;" src="__IMAGES__/{$dataInfo.picture}"/>
+                        </div>
+                    </div>
+                    <div class="hr-line-dashed"></div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">详情图</label>
+                        <div class="col-sm-10">
+                            <input type="hidden" id="data_photo2" name="intro_img" >
+                            <div id="fileList2" class="uploader-list" style="float:right"></div>
+                            <div id="imgPicker2" style="float:left">选择图片</div>
+                            <img id="img_data2" height="80px" width="80px" style="float:left;margin-left: 50px;margin-top: -10px;" src="__IMAGES__/{$dataInfo.intro_img}"/>
+                        </div>
+                    </div>
+                    <div class="hr-line-dashed"></div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">状态</label>
+                        <div class="col-sm-10">
+                            <div class="radio i-checks">
+                                <input type="radio" name='status' value="1" {if condition="$dataInfo['status'] eq 1"}checked="checked"{/if} />开启&nbsp;&nbsp;
+                                <input type="radio" name='status' value="0" {if condition="$dataInfo['status'] eq 0"}checked="checked"{/if}/>关闭
+                            </div>
+                        </div>
+                    </div>
+                    <div class="hr-line-dashed"></div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">排序</label>
+                        <div class="col-sm-10">
+                            <input type="text" name="sort" class="form-control" value="{$dataInfo.sort}">
+                        </div>
+                    </div>
+                    <div class="hr-line-dashed"></div>
+                    <div class="form-group">
+                        <div class="col-sm-4 col-sm-offset-2">
+                            <button class="btn btn-primary" type="submit">保存内容</button>
+                            <button id="closeIframe" class="btn btn-danger" type="button"><i class="fa fa-close"></i> 关闭</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{include file="public/footer"/}
+<script type="text/javascript" src="../../static/admin/webupload/webuploader.min.js"></script>
+<script type="text/javascript">
+    var $list = $('#fileList');
+    //上传图片,初始化WebUploader
+    var uploader = WebUploader.create({
+
+        auto: true,// 选完文件后，是否自动上传。
+        swf: '../../static/admin/webupload/Uploader.swf',// swf文件路径
+        server: "{:url('Upload/uploadAjax')}",// 文件接收服务端。
+        duplicate :true,// 重复上传图片，true为可重复false为不可重复
+        pick: '#imgPicker',// 选择文件的按钮。可选。
+
+        accept: {
+            title: 'Images',
+            extensions: 'gif,jpg,jpeg,bmp,png',
+            mimeTypes: 'image/jpg,image/jpeg,image/png'
+        },
+
+        'onUploadSuccess': function(file, data, response) {
+            $("#data_photo").val(data._raw);
+            $("#img_data").attr('src', '../../uploads/images/' + data._raw).show();
+        }
+    });
+
+    uploader.on( 'fileQueued', function( file ) {
+        $list.html( '<div id="' + file.id + '" class="item">' +
+            '<h4 class="info">' + file.name + '</h4>' +
+            '<p class="state">正在上传...</p>' +
+            '</div>' );
+    });
+
+    // 文件上传成功
+    uploader.on( 'uploadSuccess', function( file ) {
+        $( '#'+file.id ).find('p.state').text('上传成功！');
+    });
+
+    // 文件上传失败，显示上传出错。
+    uploader.on( 'uploadError', function( file ) {
+        $( '#'+file.id ).find('p.state').text('上传出错!');
+    });
+
+        var $list2 = $('#fileList2');
+    //上传图片,初始化WebUploader
+    var uploader2 = WebUploader.create({
+
+        auto: true,// 选完文件后，是否自动上传。
+        swf: '../../static/admin/webupload/Uploader.swf',// swf文件路径
+        server: "{:url('Upload/uploadAjax')}",// 文件接收服务端。
+        duplicate :true,// 重复上传图片，true为可重复false为不可重复
+        pick: '#imgPicker2',// 选择文件的按钮。可选。
+
+        accept: {
+            title: 'Images',
+            extensions: 'gif,jpg,jpeg,bmp,png',
+            mimeTypes: 'image/jpg,image/jpeg,image/png'
+        },
+
+        'onUploadSuccess': function(file, data, response) {
+            $("#data_photo2").val(data._raw);
+            $("#img_data2").attr('src', '../../uploads/images/' + data._raw).show();
+        }
+    });
+
+    uploader2.on( 'fileQueued', function( file ) {
+        $list.html( '<div id="' + file.id + '" class="item">' +
+            '<h4 class="info">' + file.name + '</h4>' +
+            '<p class="state">正在上传...</p>' +
+            '</div>' );
+    });
+
+    // 文件上传成功
+    uploader2.on( 'uploadSuccess', function( file ) {
+        $( '#'+file.id ).find('p.state').text('上传成功！');
+    });
+
+    // 文件上传失败，显示上传出错。
+    uploader2.on( 'uploadError', function( file ) {
+        $( '#'+file.id ).find('p.state').text('上传出错!');
+    });
+
+</script>
+</body>
+
+</html>

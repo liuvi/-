@@ -1,0 +1,155 @@
+{include file="public/header"/}
+<div class="row">
+    <div class="col-sm-12">
+        <div class="ibox float-e-margins">
+            <div class="ibox-title">
+                <h5>订单详情</h5>
+
+            </div>
+            <div class="ibox-content">
+                    <table class="table table-striped">
+                     <thead>
+                        <tr>
+                        <th>经办人</th>
+                        <th></th>
+                        <th></th>
+                    </tr>
+                     </thead>
+                     <tbody>
+                        <tr>
+                        {volist name="to" id="v"}
+                            <td>{$v.username}</td>
+                        {/volist}
+                        </tr>
+                     </tbody>
+                    </table>
+                <table class="table table-striped">
+                    <thead>
+                    <tr>
+                        <th>订单信息</th>
+                        <th></th>
+                        <th></th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <td>订单号：{$dataInfo['order_sn']}</td>
+                        <td>
+                            <span class="line">条码号：
+                                    {$dataInfo['bar_code']}
+                            </span>
+                        </td>
+                        <td>
+                            下单人:{$dataInfo['username']}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            订单状态:
+                            {if condition="$dataInfo['status'] eq 1"}
+                            未上门
+                            {elseif condition="$dataInfo['status'] eq 2"}
+                            未称重
+                            {elseif condition="$dataInfo['status'] eq 3"}
+                            已完成
+                            {else}
+                            已取消
+                            {/if}
+                        </td>
+                        <td>
+                            <span class="line">
+                                下单时间：
+                                  {$dataInfo.create_time}
+                            </span>
+                        </td>
+                        <td>订单总价:{$dataInfo['totalmoney']}</td>
+                    </tr>
+                    </tbody>
+                </table>
+                <table class="table table-striped">
+                    <thead>
+                    <tr>
+                        <th>收货信息</th>
+                        <th></th>
+                        <th></th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <td>收货人：{$dataInfo.address.username}</td>
+                        <td>称呼：{$dataInfo.address.call}</td>
+                        <td>电话：{$dataInfo.address.tel}</td>
+                    </tr>
+                    <tr>
+                        <td>收货地址:{$dataInfo.address.area}{$dataInfo.address.address}</td>
+                    </tr>
+                    </tbody>
+                </table>
+
+                <table class="table table-striped">
+                    <thead>
+                    <tr>
+                        <th>分类名称</th>
+                        <th>分类价格</th>
+                        <th>单位</th>
+                        <th>数量</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {volist name="dataInfo['goods']" id="vo"}
+                    <tr>
+                        <td>{$vo.name}</td>
+                        <td>{$vo.price}</td>
+                        <td>{$vo.unit}</td>
+                        <td>{$vo.goods_num}</td>
+                    </tr>
+                    {/volist}
+                    <tr>
+                        <td colspan="4">总价:{$dataInfo['totalmoney']}</td>
+                    </tr>
+                    </tbody>
+                </table>
+
+
+                <table class="table table-striped">
+                    <thead>
+                    <tr>操作记录</tr>
+                    <tr>
+                        <th>操作者</th>
+                        <th>操作时间</th>
+                        <th>订单状态</th>
+                        <th>描述</th>
+                        <th>备注</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {volist name="dataInfo['handle']" id="vo"}
+                    <tr>
+                        <td>{$vo['name']}</td>
+                        <td>{:date('Y-m-d H:i:s',$vo['log_time'])}</td>
+                        <td>
+                            {if condition="$vo['order_status'] eq 1"}
+                            未上门
+                            {elseif condition="$vo['order_status'] eq 2"}
+                            未称重
+                            {elseif condition="$vo['order_status'] eq 3"}
+                            已完成
+                            {else}
+                            已取消
+                            {/if}
+                        </td>
+                        <td>{$vo['status_desc']}</td>
+                        <td>{$vo['action_note']}</td>
+                    </tr>
+                    {/volist}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{include file="public/footer"/}
+
+</body>
+
+</html>

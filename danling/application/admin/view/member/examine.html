@@ -1,0 +1,54 @@
+{include file="public/header"/}
+<div class="row">
+    <div class="col-sm-12">
+        <div class="ibox float-e-margins">
+            <div class="ibox-content">
+                <form class="form-horizontal" method="post" id="signupForm" action="{:url('Member/examine')}">
+                    <input type="hidden" name="id" value="{$dataInfo.id}">
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">提现金额</label>
+                        <div class="col-sm-10">
+                            <input type="text" name="money" class="form-control" disabled value="{$dataInfo.money}">
+                        </div>
+                    </div>
+                        <div class="hr-line-dashed"></div>
+                         <div class="form-group">
+                        <label class="col-sm-2 control-label">微信号</label>
+                        <div class="col-sm-10">
+                            <input type="text" name="weixin" class="form-control" disabled value="{$dataInfo.weixin}">
+                        </div>
+                    </div>
+                    <div class="hr-line-dashed"></div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">审核状态</label>
+                        <div class="col-sm-10">
+                            <select class="form-control m-b" name="status" id="status">
+                                <option value="0">==请选择==</option>
+                                <option value="2">已打款</option>
+                                <option value="3">不予打款</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="hr-line-dashed"></div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">不打款原因</label>
+                        <div class="col-sm-10" style="">
+                            <textarea name="intro" style="width:80%;height: 100px;" id="action_note"></textarea>
+                        </div>
+                    </div>
+                    <div class="hr-line-dashed"></div>
+                    <div class="form-group">
+                        <div class="col-sm-4 col-sm-offset-2">
+                            <button class="btn btn-primary" type="submit">保存内容</button>
+                            <a href="{:url('Member/money')}" style="color: inherit;background: #fff;border: 1px solid #e7eaec;margin-bottom: 5px;border-radius: 3px;display: inline-block;padding: 6px 12px;font-size: 14px;font-weight: 400;line-height: 1.42857143;text-align: center;white-space: nowrap;vertical-align: middle;touch-action: manipulation;cursor: pointer;">取消</a>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{include file="public/footer"/}
+</body>
+
+</html>

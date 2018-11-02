@@ -1,0 +1,76 @@
+{include file="public/header"/}
+<div class="row">
+    <div class="col-sm-12">
+        <div class="ibox float-e-margins">
+            <div class="ibox-content">
+                <form class="form-horizontal" method="post" id="signupForm" action="{:url('Menu/add_menu')}">
+
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">所属父级</label>
+
+                        <div class="col-sm-10">
+                            <select class="form-control m-b" name="pid">
+                                <option value="0">==默认顶级==
+                                {volist name="lists" id="vo"}
+                                <option value="{$vo.id}" style="margin-left:55px;">{$vo.lefthtml}{$vo.title}</option>
+                                {/volist}
+                            </select>
+                        </div>
+                    </div>
+                    <div class="hr-line-dashed"></div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">菜单名称</label>
+                        <div class="col-sm-10">
+                            <input type="text" name="title" class="form-control">
+                        </div>
+                    </div>
+                    <div class="hr-line-dashed"></div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">节点名称</label>
+                        <div class="col-sm-10">
+                            <input type="text" name="name" class="form-control">
+                            <span class="help-block m-b-none">如：admin/user/adduser (一级节点添加“#”即可)</span>
+                        </div>
+                    </div>
+                    <div class="hr-line-dashed"></div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">图标样式</label>
+                        <div class="col-sm-10">
+                            <input type="text" name="css" class="form-control">
+                            <span class="help-block m-b-none"> <a href="http://fontawesome.dashgame.com/" target="_black">选择图标</a> 如fa fa-user </span>
+                        </div>
+                    </div>
+                    <div class="hr-line-dashed"></div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">排序</label>
+                        <div class="col-sm-10">
+                            <input type="text" name="sort" class="form-control">
+                        </div>
+                    </div>
+                    <div class="hr-line-dashed"></div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">状态</label>
+
+                        <div class="col-sm-10">
+                            <div class="radio i-checks">
+                                <input type="radio" name='status' value="1" checked="checked"/>开启&nbsp;&nbsp;
+                                <input type="radio" name='status' value="0" />关闭
+                            </div>
+                        </div>
+                    </div>
+                    <div class="hr-line-dashed"></div>
+                    <div class="form-group">
+                        <div class="col-sm-4 col-sm-offset-2">
+                            <button class="btn btn-primary" type="submit">保存内容</button>
+                            <button id="closeIframe" class="btn btn-danger" type="button"><i class="fa fa-close"></i> 关闭</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{include file="public/footer"/}
+</body>
+
+</html>

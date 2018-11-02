@@ -1,0 +1,160 @@
+{include file="public/header"/}
+<body class="body-bg" style="padding-bottom: 1.5rem">
+<!--头部-->
+<div class="page-header">
+	<a href="javascript:history.back(-1);" class="prev"></a>
+	<h2>丹棱环保回收</h2>
+</div>
+<!--头部 End-->
+
+<!--内容部分-->
+
+<!--选项卡-->
+<div class="page-tabs">
+	<div class="tabs-nav scroll-tab">
+		<ul>
+
+			{volist name="cateprice" id="vo"}
+			  <li pid="{$vo.id}" style="display: inline-block;width: auto; padding: 0.07rem"><a href="javascript:;">{$vo.title}</a></li>
+			{/volist}
+		</ul>
+	</div>
+	<div class="tabs-content" style="padding-bottom: 0;">
+{volist name="cateprice" id="volist"}
+		<div class="content-box">
+			<ul class="tabs-add-classify">
+			{volist name="$volist['child']" id="vol"}
+	
+				<li class="clearfix classify-item {if condition="in_array($vol['id'],$checkid)"} active {/if}" data-cid={$vol.id}>
+					<div class="float-l item-l">
+						<p>{$vol.name}</p>
+					</div>
+					<div class="float-r item-r">
+
+						<button type="button" class="lis-btn" {if condition="in_array($vol['id'],$checkid)"} disabled='disabled' {/if}>添加</button>
+					</div>
+				</li>
+
+			{/volist}
+			</ul>
+		</div>
+
+	{/volist}
+		</div>
+</div>
+<!--选项卡 End-->
+<div class="selected-classify">
+	<h6>已选择分类</h6>
+	<ul class="u-inline-list selected-list">
+	{volist name="goods_attrs" id="checkvo"}
+		<li>
+			<p class="ells-more">{$checkvo.name}</p>
+			<i class="close" onclick="delClassify(this)" data-id="{$checkvo.id}"></i>
+		</li>
+	{/volist}
+		<!--<li>-->
+			<!--<p class="ells-more">书本</p>-->
+			<!--<i class="close"></i>-->
+		<!--</li>-->
+		<!--<li>-->
+		<!--<p class="ells-more">废纸类书本</p>-->
+		<!--<i class="close"></i>-->
+		<!--</li>-->
+	</ul>
+</div>
+<div class="fixed-btn">
+	<button type="button" class="btn" onClick="confirmadd();">确认添加</button>
+</div>
+
+<!--弹框-->
+<div id="modal" class="public-modal">
+	<div class="mask-bg"></div>
+	<div class="mask-container">
+		<div class="title"></div>
+		<div class="content">
+			<p>最多只能选择三个分类!</p>
+		</div>
+		<div class="btn-box btn-one">
+			<button type="button" onclick="cancleClose()" class="cancel btn-link active">我知道了</button>
+		</div>
+	</div>
+</div>
+</body>
+<script type="text/javascript">
+	$(".tabs-nav li:eq(0)").addClass('active');
+	let strcheckid="{$strcheckid}";
+    let newarr=strcheckid.split(',');
+	let selectedArr = newarr;
+	let ulBox = $(".selected-classify .selected-list");
+	let orderid="{$orderid}";
+	function confirmadd(){
+		var data=ajax_post("{:url('Index/confirmadd')}",{catarr:selectedArr,orderid:orderid},'post');
+		if(data['code']==1){
+	    	layer.open({
+               content: data.msg
+               ,skin: 'msg'
+               ,time: 3
+            });
+            window.location.href="{:url('Index/startweigh')}?id="+orderid;
+		}else{
+			layer.open({
+               content: data.msg
+               ,skin: 'msg'
+               ,time: 3
+            });
+           return false;
+		}
+	}
+    function addClassify() {
+        $(".tabs-add-classify li").click(function () {
+            let text = $(this).find('.float-l p').text();
+            let index = $(this).index();
+            let cid  =$(this).attr('data-cid');
+			//if (selectedArr.length < 3) {
+			selectedArr.push(cid);
+			console.log(selectedArr)
+            let child = `<li>
+							<p class="ells-more">${text}</p>
+							<i class="close" onclick="delClassify(this)" data-id="${cid}"></i>
+							</li>`
+            ulBox.append(child)
+            $(this).addClass('active').find('.float-r .lis-btn').attr("disabled", true).text('已添加')
+			// } else {
+			//     showModal('#modal')
+			// }
+        })
+    }
+	function delClassify (that) {
+      let cid=$(that).attr('data-id');
+	  $('.tabs-add-classify li').each(function(){
+	  	if(cid==$(this).attr("data-cid")){
+	  		$(this).removeClass('active').find('.float-r .lis-btn').attr("disabled", false).text('添加')
+	  	}
+	  })
+      let parentChild = $(that).parent('li');
+      	let index = parentChild.index();
+        // $('.tabs-add-classify li').eq(index).removeClass('active').find('.float-r .lis-btn').attr("disabled", false).text('添加')
+
+        selectedArr.splice(index, 1);
+				parentChild.remove()
+		}
+
+		function publicTabs () {
+        let tab = $('.page-tabs');
+        let nav = tab.find('.tabs-nav li');
+        let navWidth = (parseInt(nav.eq(1).innerWidth()) * (nav.length - 1)) + 52;
+				$('.page-tabs .tabs-nav ul').css('width', navWidth + 'px');
+        tab.find('.tabs-content .content-box').hide().eq(0).show()
+        nav.click(function () {
+            let index = $(this).index()
+            $(this).addClass('active').siblings().removeClass()
+            tab.find('.tabs-content .content-box').eq(index).show().siblings().hide()
+        })
+		}
+	window.onload = function () {
+      addClassify();
+      publicTabs();
+  }
+
+</script>
+</html>
