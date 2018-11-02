@@ -1,0 +1,51 @@
+{include file="public\header"/}
+<div class="row">
+    <div class="col-sm-12">
+        <div class="ibox float-e-margins">
+            <div class="ibox-content">
+                <form class="form-horizontal" method="post" id="signupForm" action="{:url('School/add_class')}">
+
+
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">所属学校</label>
+
+                        <div class="col-sm-10">
+                            <select class="form-control m-b" name="sid">
+                                <option value="0">==请选择==</option>
+                                    {volist name="dataList" id="vo"}
+                                <option value="{$vo.id}" {if condition="$vo['id'] eq $sid"}selected{/if}>{$vo.name}</option>
+                                {/volist}
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">班级名称</label>
+                        <div class="col-sm-10">
+                            <input type="text" name="title" class="form-control">
+                        </div>
+                    </div>
+
+                    <div class="hr-line-dashed"></div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">排序</label>
+                        <div class="col-sm-10">
+                            <input type="text" name="sort" class="form-control" value="0">
+                        </div>
+                    </div>
+                    <div class="hr-line-dashed"></div>
+                    <div class="form-group">
+                        <div class="col-sm-4 col-sm-offset-2">
+                            <button class="btn btn-primary" type="submit">保存内容</button>
+                            <a href="javascript:location.reload();" style="color: inherit;background: #fff;border: 1px solid #e7eaec;margin-bottom: 5px;border-radius: 3px;display: inline-block;padding: 6px 12px;font-size: 14px;font-weight: 400;line-height: 1.42857143;text-align: center;white-space: nowrap;vertical-align: middle;touch-action: manipulation;cursor: pointer;">取消</a>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{include file="public\footer"/}
+</body>
+
+</html>

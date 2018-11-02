@@ -1,0 +1,145 @@
+{include file="public/header" /}
+<style>
+    select.input-sm{
+        height: 35px;
+        line-height: 35px;
+    }
+</style>
+<body class="gray-bg">
+<div class="wrapper wrapper-content animated fadeInRight">
+    <!-- Panel Other -->
+    <div class="ibox float-e-margins">
+        <div class="ibox-title">
+            <h5>用户列表</h5>
+        </div>
+        <div class="ibox-content">
+            <!--搜索框开始-->
+
+            <form class="form-inline" method="post" action="{:url('index')}">
+
+                <div class="form-group">
+                    <label class="font-noraml">姓名：</label>
+                    <input type="text" class="form-control" id="name" name="username" value="{$parameter['username']}" placeholder="输入需查询的姓名" />
+
+                    <label class="font-noraml">手机号：</label>
+                    <input type="text" class="form-control" name="tel" id="tel" value="{$parameter['tel']}" placeholder="输入需查询手机号" />
+
+                    <label class="font-noraml">学校：</label>
+                    <div class="input-daterange input-group">
+                        <select id="sid" class="chosen-select input-sm form-control input-s-sm inline" name="sid">
+                            <option value="0">全部</option>
+                            {volist name="schoolList" id="vo"}
+                            <option value="{$vo.id}" {if condition="$parameter['sid'] eq $vo['id']"}selected{/if}>{$vo.name}</option>
+                            {/volist}
+                        </select>
+                    </div>
+                    <label class="font-noraml">分数：</label>
+                    <div class="input-daterange input-group">
+                        <select id="fenshu" class="chosen-select input-sm form-control input-s-sm inline" name="fenshu">
+                            <option value="0">全部</option>
+                            <option value="1" {if condition="$parameter['fenshu'] eq 1"}selected{/if}>升序</option>
+                            <option value="2" {if condition="$parameter['fenshu'] eq 2"}selected{/if}>降序</option>
+                        </select>
+                    </div>
+                    <div class="input-group">
+                        <button type="submit" class="btn btn-primary"><i class="fa fa-search"></i> 搜索</button>&nbsp;&nbsp;&nbsp;&nbsp;
+                        <button type="submit" id="export" class="btn btn-primary"> 导出</button>
+                    </div>
+                </div>
+                <input type="hidden" name="daochu" id="daochu" value="0">
+            </form>
+
+            <!--搜索框结束-->
+            <div class="hr-line-dashed"></div>
+
+            <div class="example-wrap">
+                <div class="example">
+                    <table class="table table-bordered table-hover">
+                        <thead>
+                        <tr class="long-tr">
+                            <th>id</th>
+                            <th>姓名</th>
+                            <th>学校</th>
+                            <th>班级</th>
+                            <th>电话</th>
+                            <th>注册时间</th>
+                            <th>分数</th>
+                            <th>奖品</th>
+                        </tr>
+                        </thead>
+                        <script id="list-template" type="text/html">
+                            {{# for(var i=0;i<d.length;i++){ }}
+                            <tr class="long-td">
+                                <td>{{d[i].id}}</td>
+                                <td>{{d[i].username}}</td>
+                                <td>{{d[i].name}}</td>
+                                <td>{{d[i].title}}</td>
+                                <td>{{d[i].tel}}</td>
+                                <td>{{d[i].create_time}}</td>
+                                <td>{{d[i].fract}}</td>
+                                <td id="lq{{d[i].id}}">
+                                    {{# if(d[i].prize==0){ }}
+                                        无
+                                    {{# }else if(d[i].prize==1){ }}
+                                        已领取
+                                    {{# }else if(d[i].prize==2){　}}
+                                        已发放
+                                    {{# }}}
+                                </td>
+                                {{# if(d[i].prize==1){ }}
+                                <td>
+                                    <a id="status{{d[i].id}}" onclick="setTopStatus({{d[i].id}},'{:url('Member/setTopStatus')}');">
+                                    <span class="label label-primary">设为已发放</span>
+                                    </a>
+                                </td>
+                                {{#}}}
+                            </tr>
+                            {{# }}}
+                        </script>
+                        <tbody id="list-content"></tbody>
+                    </table>
+                    <div id="AjaxPage" style=" text-align: right;"></div>
+                    <div id="allpage" style=" text-align: right;"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+<!-- 加载动画 -->
+<div class="spiner-example">
+    <div class="sk-spinner sk-spinner-three-bounce">
+        <div class="sk-bounce1"></div>
+        <div class="sk-bounce2"></div>
+        <div class="sk-bounce3"></div>
+    </div>
+</div>
+{include file="public/footer" /}
+<script>
+    $(function () {
+        $('#export').click(function(){
+            $("#daochu").val(1);
+
+        });
+    });
+
+    function setTopStatus(id,url) {
+        var data=ajax_post(url,{id:id},'get','json');
+        if(data['code']==1){
+            layer.msg(data.msg,{icon:6,time:1000},function (index) {
+                layer.close(index);
+                $('#status'+id).parents('td').remove();
+                $("#lq"+id).text('已发放')
+            });
+        }
+    }
+    //laypage分页
+    var name=$("#name").val();
+    var tel=$("#tel").val();
+    var sid=$("#sid").val();
+    var fenshu=$("#fenshu").val();
+    var searchObj={username:name,tel:tel,sid:sid,fenshu:fenshu};
+    Ajaxpage(1,'{:url("Member/index")}',"{$allpage}",searchObj);
+</script>
+</body>
+</html>

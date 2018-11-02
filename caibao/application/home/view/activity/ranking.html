@@ -1,0 +1,62 @@
+{include file="public/header"/}
+<body>
+<div class="manback" style="background: url('__IMG__/backimg.png') center;">
+    <div class="paiming">
+        {if condition="$dataList[1]['name']"}
+        <div class="minkaung kaung">
+            <div class="hider">
+                <img src="__IMG__/dengj2.png"/>
+                <span>{$dataList[1]['name']}</span>
+            </div>
+            <div class="foter">
+                <p>参与人数 {$dataList[1]['people']}</p>
+                <h3>{$dataList[1]['abs_fenshu']}</h3>
+            </div>
+        </div>
+        {/if}
+        {if condition="$dataList[0]['name']"}
+        <div class="bigkaung kaung">
+            <div class="hider">
+                <img src="__IMG__/dengj1.png"/>
+                <span>{$dataList[0]['name']}</span>
+            </div>
+            <div class="foter">
+                <p>参与人数 {$dataList[0]['people']}</p>
+                <h3>{$dataList[0]['abs_fenshu']}</h3>
+            </div>
+        </div>
+        {/if}
+        {if condition="$dataList[2]['name']"}
+        <div class="minkaung kaung">
+            <div class="hider">
+                <img src="__IMG__/dengj3.png"/>
+                <span>{$dataList[2]['name']}</span>
+            </div>
+            <div class="foter">
+                <p>参与人数 {$dataList[2]['people']}</p>
+                <h3>{$dataList[2]['abs_fenshu']}</h3>
+            </div>
+        </div>
+        {/if}
+    </div>
+    <div class="table">
+        <table>
+            <tr>
+                <th>排名</th>
+                <th>学校名称</th>
+                <th>参与人数</th>
+                <th>平均分</th>
+            </tr>
+            {volist name="dataList" id="vo" key="k"}
+            <tr>
+                <td>{$k}</td>
+                <td>{$vo.name}</td>
+                <td>{$vo.people}</td>
+                <td><span>{$vo['abs_fenshu']}</span></td>
+            </tr>
+            {/volist}
+        </table>
+    </div>
+</div>
+</body>
+</html>

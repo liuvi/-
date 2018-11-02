@@ -1,0 +1,123 @@
+{include file="public/header"/}
+<script type="text/javascript" src="__JS__/ldxjquery.js"></script>
+<script src="__JS__/plugins.js"></script>
+<body>
+<div class=" manback" style="background: url('__IMG__/backimg.png') no-repeat center;">
+    <div class="result">
+        <div class="quanred">
+            <h3>{$dataInfo['fenshu']} 分</h3>
+            <p>你的得分</p>
+        </div>
+        <div class="quanred">
+            <h3>NO.{$dataInfo['rank']}</h3>
+            <p>你的排名</p>
+        </div>
+    </div>
+    <div class="activity">
+        <img src="__IMG__/text.png"/>
+    </div>
+    <div class="tishitext">
+       {$dataInfo.shuomin}
+    </div>
+    <div id="again">
+    <div class="btnc">
+        {if condition="$dataInfo['user']['prize'] eq 0"}
+        <a href="javaScript:void(0)" class="a btnred" id="draw">立即领取</a>
+        {else/}
+        <a href="javaScript:void(0)" class="a btngray" >立即领取</a>
+        {/if}
+    </div>
+    <div class="btnc">
+        {if condition="$dataInfo['user']['share_time'] neq date('Ymd')"}
+        <a href="javaScript:void(0)" class="a btnred" id="share">分享再来一次</a>
+        {else/}
+        <a href="javaScript:void(0)" class="a btngray" >分享再来一次</a>
+        {/if}
+    </div>
+    </div>
+</div>
+<div class="tanc">
+    <div class="rem">
+        <i class="iconfont">&#xe658;</i>
+    </div>
+    <div class="kap">
+        <img src="__IMG__/OK.png"/>
+        <h3>恭喜你，领取成功！</h3>
+        <p>活动奖品将于线下统一发放</p>
+    </div>
+</div>
+<div class="share">
+    <img src="__IMG__/goweb.png" />
+</div>
+<script src="http://res.wx.qq.com/open/js/jweixin-1.2.0.js"></script>
+<script>
+    $(function () {
+        $("#draw").click(function () {
+            var data=ajax_post("{:url('Activity/take')}",{},'post');
+            if(data['code']==1){
+                $(".tanc").fadeToggle(300);
+                $("#draw").unbind();
+                $("#draw").addClass('btngray');
+                return false;
+            }else{
+                layer.msg(data.msg);
+                return false;
+            }
+        })
+    });
+
+    wx.config({
+        debug: false, // 开启调试模式,调用的所有api的返回值会在客户端alert出来，若要查看传入的参数，可以在pc端打开，参数信息会通过log打出，仅在pc端时才会打印。
+        appId: '<?php echo $signPackage["appId"];?>',
+        timestamp: <?php echo $signPackage["timestamp"];?>,
+        nonceStr: '<?php echo $signPackage["nonceStr"];?>',
+        signature: '<?php echo $signPackage["signature"];?>',
+        jsApiList: ['onMenuShareTimeline','onMenuShareAppMessage'] // 必填，需要使用的JS接口列表，所有JS接口列表见附录2
+    });
+    wx.ready(function () {
+        wx.onMenuShareTimeline({
+            title: '关注消费安全知识', // 分享标题
+            desc: '我在进行消防知识答题，快来参与吧！', // 分享描述
+            link: 'www.baidu.com', // 分享链接，该链接域名或路径必须与当前页面对应的公众号JS安全域名一致
+            imgUrl: '', // 分享图标
+            success: function () {
+                callbackShare(1);
+            },
+            cancel: function () {
+                // 用户取消分享后执行的回调函数
+            }
+        });
+        wx.onMenuShareAppMessage({
+            title:'关注消费安全知识', // 分享标题
+            desc: '我在进行消防知识答题，快来参与吧！', // 分享描述
+            link: 'www.baidu.com', // 分享链接，该链接域名或路径必须与当前页面对应的公众号JS安全域名一致
+            imgUrl: '', // 分享图标
+            type: '', // 分享类型,music、video或link，不填默认为link
+            dataUrl: '', // 如果type是music或video，则要提供数据链接，默认为空
+            success: function () {
+                callbackShare(2);
+            },
+            cancel: function () {
+                // 用户取消分享后执行的回调函数
+            }
+        });
+
+
+
+    });
+
+    //分享回调时记录分享
+    function callbackShare(status){
+        var data=ajax_post("{:url('Activity/share')}",{status:status},'post');
+        if(data['code']==1){
+            layer.msg(data.msg);
+            $(".tishitext").text('分享成功，你已获得再次答题的机会');
+            $("#again").html('<div class="btnc"><a href="{:url('Activity/topic')}" class="a btnred">再次答题</a> </div>');
+        }else{
+            layer.msg(data.msg);
+            return false;
+        }
+    }
+</script>
+</body>
+</html>
